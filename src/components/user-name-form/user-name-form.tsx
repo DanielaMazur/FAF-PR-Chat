@@ -1,3 +1,5 @@
+import "./user-name-form.styles.css";
+
 type UserNameFormProps = {
   setUserName: (userName: string) => void;
 };
@@ -9,10 +11,16 @@ const UserNameForm = (props: UserNameFormProps) => {
   };
 
   return (
-    <form onSubmit={handleFormSubmit}>
-      <input placeholder="Enter your name" required />
-      <button type="submit">Enter the live chat</button>
-    </form>
+    <div className="user-name-page">
+      <form onSubmit={handleFormSubmit}>
+        <input
+          className="user-name-input"
+          placeholder="Enter your name"
+          required
+        />
+        <button type="submit">Enter the live chat</button>
+      </form>
+    </div>
   );
 };
 
