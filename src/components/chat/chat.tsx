@@ -1,38 +1,41 @@
 import { useEffect, useRef, useState } from "react";
 import "./chat.styles.css";
 
-const webSocket = new WebSocket("wss://localhost:44324");
-
 type ChatProps = {
   userName: string;
 };
 
 const Chat = (props: ChatProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
-
+  const webSocket = useRef<WebSocket | null>(null);
   const [messages, setMessages] = useState<string[]>([]);
 
   useEffect(() => {
-    webSocket.onmessage = (message) => {
+    webSocket.current = new WebSocket(
+      "wss://localhost:44324" + window.location.pathname
+    );
+
+    webSocket.current.onmessage = (message) => {
       setMessages((prevMessages) => [...prevMessages, message.data]);
     };
-  });
+  }, []);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = (event: any) => {
+    event.preventDefault();
     if (!inputRef.current) return;
-    webSocket.send(props.userName + ": " + inputRef.current.value);
+    webSocket.current?.send(props.userName + ": " + inputRef.current.value);
     inputRef.current.value = "";
   };
 
   return (
     <div className="chat-page">
       <h3>Hi {props.userName}</h3>
-      <div className="actions-container ">
+      <form className="actions-container" onSubmit={handleSendMessage}>
         <input className="chat-input" ref={inputRef} />
-        <button className="submit-button" onClick={handleSendMessage}>
+        <button type="submit" className="submit-button">
           Send
         </button>
-      </div>
+      </form>
 
       {messages.map((message) => (
         <div key={props.userName + message}>{message}</div>
