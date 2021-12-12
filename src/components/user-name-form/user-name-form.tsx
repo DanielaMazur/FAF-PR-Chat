@@ -1,6 +1,7 @@
 import "./user-name-form.styles.css";
 import { v4 } from "uuid";
 import { FormEvent, useState } from "react";
+import { Pop3Email } from "../pop3-email";
 
 type UserNameFormProps = {
   setUserName: (userName: string) => void;
@@ -8,6 +9,8 @@ type UserNameFormProps = {
 
 const UserNameForm = (props: UserNameFormProps) => {
   const [isSMTPEmail, setSMTPEmail] = useState(false);
+  const [isGetLatestPOP3Emails, setGetLatestPOP3Emails] = useState(false);
+
   const handleFormSubmit = async (event: any) => {
     event.preventDefault();
     if (window.location.pathname === "/") {
@@ -64,8 +67,18 @@ const UserNameForm = (props: UserNameFormProps) => {
 
     return (
       <form onSubmit={sendEmail} className="user-name-page">
-        <input className="margin-bottom" placeholder="from" name="from" />
-        <input className="margin-bottom" placeholder="to" name="to" />
+        <input
+          className="margin-bottom"
+          placeholder="from"
+          name="from"
+          type="email"
+        />
+        <input
+          className="margin-bottom"
+          placeholder="to"
+          name="to"
+          type="email"
+        />
         <input
           className="margin-bottom"
           placeholder="password"
@@ -83,6 +96,10 @@ const UserNameForm = (props: UserNameFormProps) => {
     );
   }
 
+  if (isGetLatestPOP3Emails) {
+    return <Pop3Email />;
+  }
+
   return (
     <div className="user-name-page">
       <div>
@@ -97,6 +114,10 @@ const UserNameForm = (props: UserNameFormProps) => {
       </div>
       OR
       <button onClick={() => setSMTPEmail(true)}>Send an SMTP Email</button>
+      OR
+      <button onClick={() => setGetLatestPOP3Emails(true)}>
+        Get POP3 Email
+      </button>
     </div>
   );
 };
