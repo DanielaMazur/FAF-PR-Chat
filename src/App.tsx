@@ -6,13 +6,19 @@ import { UserNameForm } from "./components/user-name-form";
 
 const App = () => {
   const [userName, setUserName] = useState<string>();
+  const [chatType, setChatType] = useState<"webSocket" | "serverSentEvents">(
+    "webSocket"
+  );
 
-  return <SignalRChat />;
-  // if (!userName) {
-  //   return <UserNameForm setUserName={setUserName} />;
-  // }
+  if (!userName) {
+    return <UserNameForm setUserName={setUserName} setChatType={setChatType} />;
+  }
 
-  // return <Chat userName={userName} />;
+  if (chatType === "serverSentEvents") {
+    return <SignalRChat userName={userName} />;
+  }
+
+  return <Chat userName={userName} />;
 };
 
 export default App;

@@ -5,6 +5,9 @@ import { Pop3Email } from "../pop3-email";
 
 type UserNameFormProps = {
   setUserName: (userName: string) => void;
+  setChatType: React.Dispatch<
+    React.SetStateAction<"webSocket" | "serverSentEvents">
+  >;
 };
 
 const UserNameForm = (props: UserNameFormProps) => {
@@ -13,9 +16,19 @@ const UserNameForm = (props: UserNameFormProps) => {
 
   const handleFormSubmit = async (event: any) => {
     event.preventDefault();
-    if (window.location.pathname === "/") {
-      await createRoom();
+
+    const chatType =
+      event.nativeEvent.submitter.name === "webSocketChat"
+        ? "webSocket"
+        : "serverSentEvents";
+
+    if (chatType === "webSocket") {
+      if (window.location.pathname === "/") {
+        await createRoom();
+      }
     }
+
+    props.setChatType(chatType);
     props.setUserName(event.target[0].value);
   };
 
@@ -109,7 +122,12 @@ const UserNameForm = (props: UserNameFormProps) => {
             placeholder="Enter your name"
             required
           />
-          <button type="submit">Enter the live chat</button>
+          <button type="submit" name="webSocketChat">
+            Enter WebSocket chat
+          </button>
+          <button type="submit" name="serverSentEventsChat">
+            Enter ServerSentEvents chat
+          </button>
         </form>
       </div>
       OR
